@@ -1,1 +1,9 @@
 @import 'tailwindcss';
+
+body {
+    font-family: 'Manrope', sans-serif;
+}
+
+@theme {
+    --font-epilogue: 'Epilogue', sans-serif;
+}
