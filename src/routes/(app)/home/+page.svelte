@@ -8,9 +8,9 @@
 
 <main class="p-6 mb-20">
     <h1 class="font-bold font-epilogue text-4xl mb-2 mt-4">Bentornato, Andre.</h1>
-    <p class="text-gray-500">Dove eravamo rimasti?</p> <!-- qui potrebbero girare più frasi a rotazione, salvate in un json -->
+    <p class="text-gray-500 dark:text-gray-400">Dove eravamo rimasti?</p> <!-- qui potrebbero girare più frasi a rotazione, salvate in un json -->
 
-    <div class="flex items-center w-full gap-1 bg-white px-4 py-2 border border-px border-gray-200 rounded-xl mt-3 mb-5">
+    <div class="flex items-center w-full gap-1 bg-white dark:bg-gray-800 px-4 py-2 border border-px border-gray-200 dark:border-gray-700 rounded-xl mt-3 mb-5">
         <span class="material-symbols-rounded text-orange-400" style="font-size: 28px; font-variation-settings: 'FILL' 1;">local_fire_department</span>
         <p class="text-sm">Streak di 12 giorni!</p>
     </div>
@@ -41,8 +41,8 @@
         </div>
     </div>
 
-    <div class="w-full flex items-center justify-center flex-col bg-white rounded-xl px-6 py-8 border border-gray-200 cursor-pointer mt-6 hover:scale-101 transition-transform">
-        <div class="p-4 bg-indigo-50 text-indigo-600 w-fit rounded-xl flex items-center justify-center">
+    <div class="w-full flex items-center justify-center flex-col bg-white dark:bg-gray-800 rounded-xl px-6 py-8 border border-gray-200 dark:border-gray-700 cursor-pointer mt-6 hover:scale-101 transition-transform">
+        <div class="p-4 bg-indigo-50 dark:bg-indigo-400/20 text-indigo-600 w-fit rounded-xl flex items-center justify-center">
             <span class="material-symbols-rounded" style="font-size: 28px">add</span>
         </div>
         <h3 class="font-medium font-epilogue text-xl mt-3">Avvia nuovo test</h3>

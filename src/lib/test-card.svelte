@@ -12,10 +12,10 @@
     }
 </script>
 
-<div class="bg-white border border-gray-200 rounded-xl p-6">
+<div class="bg-white border border-gray-200 dark:bg-gray-800 dark:border-gray-700 rounded-xl p-6">
     <div class="flex items-center gap-2 justify-between">
         <div class="flex items-center gap-3">
-            <span class="material-symbols-rounded p-3 rounded-xl text-indigo-600 bg-indigo-100" style="font-size: 24px">{icon}</span>
+            <span class="material-symbols-rounded p-3 rounded-xl text-indigo-600 bg-indigo-100 dark:bg-indigo-600/20" style="font-size: 24px">{icon}</span>
             <div>
                 <p class="font-bold text-lg">{materia}</p>
             </div>
