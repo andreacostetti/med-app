@@ -1,9 +1,8 @@
-name: Build Android APK (Node 24 Optimized)
+name: Build Android APK (Full Node 24 Compliance)
 on:
   push:
     branches: [ main ]
 
-# Impostiamo la variabile d'ambiente a livello di workflow per anticipare l'obbligo di giugno
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -11,16 +10,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # Aggiornato a v4.2.2+ o v5 (controlla i tag più recenti nel 2026)
       - name: Checkout del codice
-        uses: actions/checkout@v4 # Le v4 sono già compatibili con i nuovi runner
+        uses: actions/checkout@v4 
 
       - name: Setup Node.js 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24 # Passiamo alla versione stabile più recente del 2026
+          node-version: 24
+          cache: 'npm' # Ottimo per velocizzare le build successive
 
       - name: Installa dipendenze
-        run: npm install
+        run: npm ci # Più veloce e pulito di 'install' in ambienti CI
 
       - name: Build progetto Svelte 5
         run: npm run build
@@ -30,17 +31,19 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '17'
+          cache: 'gradle' # Fondamentale per non riscaricare Gradle ogni volta
 
       - name: Sync Capacitor 8.3.1
-        run: |
-          npx cap sync android
+        run: npx cap sync android
 
       - name: Build dell'APK (Debug)
         run: |
+          chmod +x android/gradlew
           cd android && ./gradlew assembleDebug
 
-      - name: Carica l'APK come artefatto
+      - name: Carica l'APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-debug-node24
+          name: app-debug
           path: android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 7 # Risparmia spazio sul tuo GitHub storage
