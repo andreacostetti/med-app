@@ -47,6 +47,6 @@
 
     <div class="flex items-center justify-between mt-3">
         <p class="text-sm text-gray-500/90">{data}, {ora}</p>
-        <p class="text-indigo-600 hover:underline text-sm cursor-pointer select-none">Dettagli</p>
+        <a class="text-indigo-600 hover:underline text-sm cursor-pointer select-none" href="/result">Dettagli</a>
     </div>
 </div>

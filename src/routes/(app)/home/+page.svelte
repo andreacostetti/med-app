@@ -2,6 +2,8 @@
     import BottomBar from "$lib/bottom-bar.svelte";
     import Navbar from "$lib/navbar.svelte";
     import Testcard from "$lib/test-card.svelte";
+
+    import { goto } from "$app/navigation";
 </script>
 
 <Navbar/>
@@ -15,7 +17,7 @@
         <p class="text-sm">Streak di 12 giorni!</p>
     </div>
 
-    <div class="bg-indigo-600 p-6 rounded-xl w-full text-white flex flex-col justify-between hover:scale-101 transition-transform">
+    <div class="bg-indigo-600 p-6 rounded-xl w-full text-white flex flex-col justify-between hover:scale-101 transition-transform" onclick={() => {goto('/test');}}>
         <div class="mb-20">
             <div class="flex items-center px-3 py-1 gap-2 bg-indigo-500 w-fit rounded-full tracking-wide text-sm border border-2 border-indigo-500 mb-5">
                 <div class="size-2.5 bg-green-500 rounded-full"></div>
@@ -51,7 +53,7 @@
     <div class="flex items-center justify-between mt-10">
         <h2 class="font-semibold text-2xl font-epilogue">Test completati</h2>
         <div class="flex items-center gap-1 justify-end text-sm text-indigo-600 cursor-pointer">
-            <p class="hover:underline">Vedi tutti</p>
+            <a href="/history" class="hover:underline">Vedi tutti</a>
             <span class="material-symbols-rounded">arrow_forward</span>
         </div>
     </div>
@@ -61,4 +63,4 @@
     </div>
 </main>
 
-<BottomBar/>
+<BottomBar page='home'/>
