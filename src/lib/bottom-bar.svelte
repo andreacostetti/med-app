@@ -4,7 +4,7 @@
     let {page} = $props();
 </script>
 
-<div class="flex justify-evenly items-center px-8 py-6 bg-white fixed bottom-0 w-screen left-0 select-none">
+<div class="flex justify-evenly items-center px-8 py-6 bg-white dark:bg-[#16161d] fixed bottom-0 w-screen left-0 select-none">
     <div class="text-center cursor-pointer" onclick={() => {goto('/home');}}>
         <span class="material-symbols-rounded" style={page == 'home' ? "font-variation-settings: 'FILL' 1" : ""}>home</span>
     </div>

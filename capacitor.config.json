@@ -1,5 +1,21 @@
 {
   "appId": "com.andreacostetti.unitests",
   "appName": "UniTest",
-  "webDir": "dist"
+  "webDir": "build",
+  "plugins": {
+    "StatusBar": {
+      "overlapped": false,
+      "style": "DEFAULT"
+    },
+    "FirebaseAuthentication": {
+      "skipNativeAuth": false,
+      "providers": ["google.com"],
+      "permissions": ["user.profile", "user.email"],
+      "clientId": "985142651823-n5c623u5foafaab548nskqdqv2u4qajh.apps.googleusercontent.com"
+    }
+  },
+  "server": {
+    "url": "http://192.168.1.14:5173/",
+    "cleartext": true
+  }
 }

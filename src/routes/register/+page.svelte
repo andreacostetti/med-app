@@ -1,0 +1,22 @@
+<main class="p-6 h-screen w-screen flex items-center justify-center">
+    <div>
+        <h1 class="text-4xl font-bold font-epilogue">Crea il tuo account</h1>
+        <p class="text-gray-600 mb-6">Inserisci i tuoi dati e inizia a ad esercitarti con UniTest.</p>
+
+        <label for="name" class="text-sm">Nome</label>
+        <input type="name" id="name" class="w-full border border-gray-200 rounded-xl h-12 mt-1 mb-3 p-4" placeholder="Mario Rossi" required>
+        
+        <label for="email" class="text-sm">Email</label>
+        <input type="email" id="email" class="w-full border border-gray-200 rounded-xl h-12 mt-1 mb-3 p-4" placeholder="name@university.edu" required>
+        
+        <label for="password" class="text-sm">Password</label>
+        <input type="password" id="password" class="w-full border border-gray-200 rounded-xl h-12 mt-1 mb-6 p-4" placeholder="••••••••" required>
+
+        <button class="bg-indigo-600 border border-transparent text-sm rounded-lg w-full text-white flex justify-center items-center gap-2 h-12 hover:bg-indigo-700 cursor-pointer focus:bg-indigo-700">Crea account</button>
+
+        <p class="text-gray-500 w-full text-center mt-8">Hai già un account? <a href="/login" class="text-indigo-600 hover:underline">Accedi</a><p>
+
+        <hr class="text-gray-300 mt-14 mb-4">
+        <p class="text-gray-400 text-xs w-full text-center">Registrandoti, accetti i nostri <a href="/terms">Termini di Servizio</a> e la <a href="/privacy">Privacy Policy</a>.</p>
+    </div>
+</main>

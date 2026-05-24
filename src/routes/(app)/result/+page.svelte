@@ -12,7 +12,7 @@
 	}
 
     onMount(() => {
-        //partyBoom();
+        partyBoom();
     });
 </script>
 

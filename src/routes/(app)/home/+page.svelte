@@ -2,17 +2,19 @@
     import BottomBar from "$lib/bottom-bar.svelte";
     import Navbar from "$lib/navbar.svelte";
     import Testcard from "$lib/test-card.svelte";
+    import {user} from "$lib/user.js";
 
     import { goto } from "$app/navigation";
+
 </script>
 
 <Navbar/>
 
 <main class="p-6 mb-20">
-    <h1 class="font-bold font-epilogue text-4xl mb-2 mt-4">Bentornato, Andre.</h1>
+    <h1 class="font-bold font-epilogue text-4xl mb-2 mt-4">Bentornato, {user.userInfo?.displayName}.</h1>
     <p class="text-gray-500 dark:text-gray-400">Dove eravamo rimasti?</p> <!-- qui potrebbero girare più frasi a rotazione, salvate in un json -->
 
-    <div class="flex items-center w-full gap-1 bg-white dark:bg-gray-800 px-4 py-2 border border-px border-gray-200 dark:border-gray-700 rounded-xl mt-3 mb-5">
+    <div class="flex items-center w-full gap-1 bg-white  px-4 py-2 border border-px border-gray-200 dark:bg-[#222229] dark:border-[#3b3b3f] rounded-xl mt-3 mb-5">
         <span class="material-symbols-rounded text-orange-400" style="font-size: 28px; font-variation-settings: 'FILL' 1;">local_fire_department</span>
         <p class="text-sm">Streak di 12 giorni!</p>
     </div>
@@ -28,7 +30,7 @@
         </div>
         <div class="flex items-center justify-between w-full gap-6 text-indigo-200/90">
             <div class="w-full">
-                <div class="flex items-center justify-between text-xs mb-1">
+                <div class="flex items-center justify-between text-sm mb-1">
                     <p>12:11 rimanenti</p>
                     <p>3/20</p>
                 </div>
@@ -43,8 +45,8 @@
         </div>
     </div>
 
-    <div class="w-full flex items-center justify-center flex-col bg-white dark:bg-gray-800 rounded-xl px-6 py-8 border border-gray-200 dark:border-gray-700 cursor-pointer mt-6 hover:scale-101 transition-transform">
-        <div class="p-4 bg-indigo-50 dark:bg-indigo-400/20 text-indigo-600 w-fit rounded-xl flex items-center justify-center">
+    <div class="w-full flex items-center justify-center flex-col bg-white dark:bg-[#222229] rounded-xl px-6 py-8 border border-gray-200 dark:border-[#3b3b3f] cursor-pointer mt-6 hover:scale-101 transition-transform">
+        <div class="p-4 bg-indigo-50 dark:bg-indigo-400/20 text-indigo-600 dark:text-indigo-400 w-fit rounded-xl flex items-center justify-center">
             <span class="material-symbols-rounded" style="font-size: 28px">add</span>
         </div>
         <h3 class="font-medium font-epilogue text-xl mt-3">Avvia nuovo test</h3>
@@ -52,7 +54,7 @@
 
     <div class="flex items-center justify-between mt-10">
         <h2 class="font-semibold text-2xl font-epilogue">Test completati</h2>
-        <div class="flex items-center gap-1 justify-end text-sm text-indigo-600 cursor-pointer">
+        <div class="flex items-center gap-1 justify-end text-sm text-indigo-600 dark:text-indigo-400 cursor-pointer">
             <a href="/history" class="hover:underline">Vedi tutti</a>
             <span class="material-symbols-rounded">arrow_forward</span>
         </div>
