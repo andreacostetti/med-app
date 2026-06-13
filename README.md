@@ -29,6 +29,12 @@ npm run dev
 npm run dev -- --open
 ```
 
+To start the server and update live the app:
+
+```sh
+npm run dev -- --host 
+```
+
 ## Building
 
 To create a production version of your app:

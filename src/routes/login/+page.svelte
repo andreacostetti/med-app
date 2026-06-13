@@ -1,25 +1,26 @@
 <script>
     import { goto } from "$app/navigation";
-
     import { FirebaseAuthentication } from '@capacitor-firebase/authentication';
-    import { user } from '$lib/user.js'; // Il tuo file di stato globale
+    import { user } from '$lib/user.svelte.js';
     import { onMount } from "svelte";
 
     let caricamento = $state(false);
     let errore = $state('');
+    let from = $state('');
+    let storedUser = $state(null);
 
     async function accediConGoogle() {
         caricamento = true;
         errore = '';
         
         try {
-            // Avvia il pop-up nativo del telefono (iOS/Android)
-            const result = await FirebaseAuthentication.signInWithGoogle();
+            // 1. MODIFICA CRITICA PER ANDROID: 
+            // Inserisci il Web Client ID per risolvere l'errore "no credentials are available"
+            const result = await FirebaseAuthentication.signInWithGoogle({
+                clientId: '985142651823-qeanh1ifchgapq2v3g8b5dcq8hgle8ns.apps.googleusercontent.com'
+            });
             
-            // L'utente Google è dentro result.user
             const googleUser = result.user;
-            
-            // Questo è il token (JWT) generato da Google
             const idToken = result.credential?.idToken;
 
             if (!idToken) {
@@ -28,59 +29,87 @@
 
             console.log("Login Google riuscito per:", googleUser.displayName);
 
-            // --- CASO A: Se usi il tuo Backend PHP + MySQL ---
-            // Invia il token al tuo server per registrarlo o loggarlo nel DB
-            /*
-            const res = await fetch('https://tuosito.com/api/login_google.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token: idToken })
-            });
-            const backendData = await res.json();
-            */
+            const myHeaders = new Headers();
+            myHeaders.append("X-Authorization", "Bearer " + idToken);
 
-            // Aggiorna lo stato globale in Svelte 5
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                redirect: "follow"
+            };
+
+            // 2. OTTIMIZZAZIONE FETCH:
+            // Usare await rende il codice più pulito e permette al blocco catch 
+            // di intercettare eventuali errori del server PHP MySQL
+            const response = await fetch("https://www.basketscore.it/med-app/user/add", requestOptions);
+            const serverResult = await response.text();
+            console.log("Risposta dal server:", serverResult);
+
+            // Aggiorna lo stato globale
             user.isLoggedIn = true;
             user.userInfo = googleUser; 
             user.token = idToken;
 
-            //goto('/home');
+            localStorage.setItem("loggedUser", JSON.stringify(user));
+            
+            goto('/home');
 
         } catch (err) {
             console.error("Errore durante il login:", err);
-            errore = err;
+            // Firebase restituisce spesso oggetti di errore complessi, meglio estrarre il messaggio
+            errore = err.message || "Errore sconosciuto durante l'accesso";
         } finally {
             caricamento = false;
         }
     }
 
     onMount(() => {
-        if(user.isLoggedIn) {
-            //goto('/home');
+        // 3. SICUREZZA ONMOUNT:
+        // Se è la prima volta che l'utente apre l'app, localStorage restituisce null.
+        // Dobbiamo assicurarci che storedUser esista prima di leggerne le proprietà.
+        const localData = localStorage.getItem("loggedUser");
+        
+        if (localData) {
+            storedUser = JSON.parse(localData);
         }
-    })
+
+        if (user.isLoggedIn) {
+            goto('/home');
+            from = "memory";
+            return; // Ferma l'esecuzione qui
+        }
+
+        // Aggiunto il controllo storedUser && ...
+        if (storedUser && storedUser.isLoggedIn) {
+            user.token = storedUser.token;
+            user.userInfo = storedUser.userInfo;
+            user.isLoggedIn = storedUser.isLoggedIn;
+            goto('/home');
+            from = "localstorage";
+        }
+    });
 
 </script>
+
 <main class="p-6 flex items-center justify-center h-[90vh] w-screen">
     <div>
         <div class="bg-gray-300 text-xs text-gray-600 rounded-xl size-13 flex items-center justify-center">
         LOGO
         </div>
         <h1 class="text-4xl font-bold font-epilogue mt-8">Accedi</h1>
-        <p class="text-gray-600 mb-6">Bentornato in UniTest. Accedi il tuo account Google per continuare.</p>
+        <p class="text-gray-600 mb-6">Bentornato in UniTest. Accedi con il tuo account Google per continuare.</p>
 
-       
         {#if errore}
             <div class="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm">
                 {errore}
             </div>
         {/if}
+        
         <button 
             onclick={accediConGoogle} 
             disabled={caricamento}
-            class="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 text-gray-700 font-semibold p-3 rounded-xl shadow-sm hover:bg-gray-50 transitiondisabled:opacity-50"
+            class="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 text-gray-700 font-semibold p-3 rounded-xl shadow-sm hover:bg-gray-50 transition disabled:opacity-50"
         >
-            <!-- Icona SVG di Google -->
             <svg class="w-5 h-5" viewBox="0 0 24 24">
                 <path fill="#EA4335" d="M12 5.04c1.66 0 3.2.57 4.38 1.69l3.27-3.27C17.67 1.42 15 0 12 0 7.35 0 3.37 2.67 1.42 6.56l3.86 3c.92-2.76 3.51-4.52 6.72-4.52z"/>
                 <path fill="#4285F4" d="M23.49 12.27c0-.81-.07-1.59-.2-2.34H12v4.44h6.44c-.28 1.48-1.12 2.74-2.38 3.58l3.69 2.86c2.16-1.99 3.42-4.91 3.42-8.54z"/>
@@ -96,12 +125,16 @@
         </button>
 
         {#if user.isLoggedIn}
-            <p>Loggato!</p>
-            <label for="">token: </label>
-            <input value={user.token}>
-            <br>
-            <label for="">uid:</label>
-            <input value={user.userInfo.providerData[0].uid}>
+            <div class="mt-4">
+                <p class="text-green-600 font-bold">Loggato!</p>
+                <label class="text-xs text-gray-500">token: </label>
+                <input class="w-full text-xs border p-1 rounded" value={user.token} readonly>
+                <br>
+                <label class="text-xs text-gray-500 mt-2">uid:</label>
+                <input class="w-full text-xs border p-1 rounded" value={user.userInfo?.providerData[0]?.uid} readonly>
+            </div>
         {/if}
+
+        <p class="text-xs text-gray-400 mt-4 text-center">From: {from}</p>
     </div>
 </main>

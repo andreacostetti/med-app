@@ -14,6 +14,7 @@
 
     <button class="rounded-xl px-4 py-2 bg-indigo-600 text-white font-semibold cursor-pointer mt-10" onclick={() => {goto("/login")}}>Vai al login</button>
     
+    
 </main>
 
 <BottomBar page='profile'/>

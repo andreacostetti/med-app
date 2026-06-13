@@ -1,5 +1,12 @@
 <script>
     import { goto } from "$app/navigation";
+    import { 
+        subscriptionState, 
+        presentPaywall, 
+        openCustomerCenter 
+    } from '$lib/revenuecat.svelte.js';
+
+
 
     let {page} = $props();
 </script>
@@ -11,9 +18,14 @@
     <div class="text-center cursor-pointer" onclick={() => {goto('/history');}}>
         <span class="material-symbols-rounded" style={page == 'history' ? "font-variation-settings: 'FILL' 1" : ""}>history</span>
     </div>
-    <div class="text-center cursor-pointer" onclick={() => {goto('/premium');}}>
-        <span class="material-symbols-rounded" style={page == 'premium' ? "font-variation-settings: 'FILL' 1" : ""}>crown</span>
-    </div>
+    {#if subscriptionState.isInitialized}
+        {#if !subscriptionState.hasActiveSubscription}
+            <div class="text-center cursor-pointer" onclick={() => {goto('/premium');}}>
+                <span class="material-symbols-rounded" style={page == 'premium' ? "font-variation-settings: 'FILL' 1" : ""}>crown</span>
+            </div>
+        {/if}
+    {/if}
+    
     <div class="text-center cursor-pointer" onclick={() => {goto('/profile');}}>
         <span class="material-symbols-rounded" style={page == 'profile' ? "font-variation-settings: 'FILL' 1" : ""}>person</span>
     </div>

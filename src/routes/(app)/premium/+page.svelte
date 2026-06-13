@@ -2,6 +2,7 @@
     import BottomBar from "$lib/bottom-bar.svelte";
     import Navbar from "$lib/navbar.svelte";
     import Testcard from "$lib/test-card.svelte";
+    import { goto } from "$app/navigation";
 </script>
 
 <Navbar/>
@@ -53,7 +54,7 @@
                 </div>
             </li>
         </ul>
-        <button class="mt-4 w-full bg-white border-1 border-indigo-500 hover:bg-indigo-500 hover:text-white text-indigo-600 rounded-lg py-2.5 text-sm font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50">
+        <button class="mt-4 w-full bg-white border-1 border-indigo-500 hover:bg-indigo-500 hover:text-white text-indigo-600 rounded-lg py-2.5 text-sm font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50" onclick={() => {goto('/checkPremium')}}>
             Upgrade Now
         </button>
     </div>

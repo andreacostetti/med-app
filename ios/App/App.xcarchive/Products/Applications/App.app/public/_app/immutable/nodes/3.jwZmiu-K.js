@@ -1,0 +1,1 @@
+import{S as e,b as t}from"../chunks/p62X09pH.js";import"../chunks/DEggy0fl.js";var n=e(`<main class="w-screen h-screen flex items-center justify-center"><a class="rounded-xl px-4 py-2 bg-indigo-600 text-white font-semibold cursor-pointer" href="/home">Vai alla home</a></main>`);function r(e){t(e,n())}export{r as component};

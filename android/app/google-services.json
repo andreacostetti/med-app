@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "985142651823-47ud7e9v0h4omsgch1l1odoiir87579g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.andreacostetti.unitests",
+            "certificate_hash": "1c9e16e55f7d15b0af42186ec3a1577cbbb43ecb"
+          }
+        },
+        {
           "client_id": "985142651823-qeanh1ifchgapq2v3g8b5dcq8hgle8ns.apps.googleusercontent.com",
           "client_type": 3
         }

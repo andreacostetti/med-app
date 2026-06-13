@@ -1,0 +1,1 @@
+import{I as e}from"./p62X09pH.js";var t=e({preferences:{fav_subjects:[`biology`,`physics`,`chemistry`,`maths`]},premium:!1,isLoggedIn:!1});export{t};

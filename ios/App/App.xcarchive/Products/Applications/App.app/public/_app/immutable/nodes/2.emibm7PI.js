@@ -1,0 +1,1 @@
+import{P as e,U as t,W as n,b as r,m as i,n as a,x as o}from"../chunks/p62X09pH.js";import{t as s}from"../chunks/mq0vcl7r.js";import"../chunks/DEggy0fl.js";import"../chunks/-duBpP_m.js";import{t as c}from"../chunks/CbGs3IXy.js";function l(l,u){n(u,!0),a(()=>{c.isLoggedIn||s(`/login`)});var d=o();i(e(d),()=>u.children),r(l,d),t()}export{l as component};

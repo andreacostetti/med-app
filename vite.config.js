@@ -5,9 +5,8 @@ import { defineConfig } from 'vite';
 export default defineConfig({
 	plugins: [tailwindcss(), sveltekit()],
 	server: {
-		host: '0.0.0.0',
+		host: true,
 		port: 5173,
-		strictPort: true,
-		allowedHosts: true
+		allowedHosts: ['odometrical-callum-veridically.ngrok-free.dev', '0.0.0.0']
 	}
 });

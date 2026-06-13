@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "unitest icon-iOS-Default-1024x1024@1x.png",
+      "filename" : "unitest-icon.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"

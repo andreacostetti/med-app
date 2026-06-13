@@ -1,0 +1,1 @@
+import{I as e}from"./p62X09pH.js";var t=e({id:null,questions:[],totalQuestions:0,reset(){this.id=null,this.questions=[],this.currentIndex=0}});export{t};

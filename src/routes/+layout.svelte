@@ -4,6 +4,7 @@
 	import { Capacitor } from '@capacitor/core';
     import { StatusBar, Style } from '@capacitor/status-bar';
     import { onMount } from 'svelte';
+	import { initRevenueCat } from '$lib/revenuecat.svelte';
 	
 	let { children } = $props();
 
@@ -15,6 +16,8 @@
 	let isDarkMode = $state(false);
 
 	onMount(() => {
+		initRevenueCat();
+		
 		const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 		isDarkMode = mediaQuery.matches;
 
