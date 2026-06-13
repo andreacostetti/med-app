@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "985142651823",
+    "project_id": "unitest-3e6d7",
+    "storage_bucket": "unitest-3e6d7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:985142651823:android:f1259ce110b0d176605d5a",
+        "android_client_info": {
+          "package_name": "com.andreacostetti.unitests"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "985142651823-qeanh1ifchgapq2v3g8b5dcq8hgle8ns.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0a6Sf8ZYzUmMS_b_ujFDaJzNf3W0VyPs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "985142651823-9fvfimr1r7k98ng7j0qcfd8vofthnsis.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "985142651823-lka3bm7sr7ev8gv9in90flck69c4f0bs.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.andreacostetti.unitests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
