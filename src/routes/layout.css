@@ -7,3 +7,19 @@ body {
 @theme {
     --font-epilogue: 'Epilogue', sans-serif;
 }
+
+html, body {
+    overscroll-behavior-y: none;
+    
+    touch-action: pan-x pan-y; 
+    
+    -webkit-user-select: none;
+    user-select: none; 
+    
+    -webkit-tap-highlight-color: transparent; 
+}
+
+input, textarea {
+    -webkit-user-select: auto;
+    user-select: auto;
+}

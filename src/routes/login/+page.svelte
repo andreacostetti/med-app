@@ -3,6 +3,11 @@
     import { FirebaseAuthentication } from '@capacitor-firebase/authentication';
     import { user } from '$lib/user.svelte.js';
     import { onMount } from "svelte";
+    import { Capacitor } from '@capacitor/core';
+    import { getValidToken } from "$lib/api";
+    import appLogo from '$lib/assets/full-icon.jpg'
+    import { loginRevenueCat } from "$lib/revenuecat.svelte";
+
 
     let caricamento = $state(false);
     let errore = $state('');
@@ -14,14 +19,16 @@
         errore = '';
         
         try {
-            // 1. MODIFICA CRITICA PER ANDROID: 
-            // Inserisci il Web Client ID per risolvere l'errore "no credentials are available"
-            const result = await FirebaseAuthentication.signInWithGoogle({
-                clientId: '985142651823-qeanh1ifchgapq2v3g8b5dcq8hgle8ns.apps.googleusercontent.com'
-            });
+            const platform = Capacitor.getPlatform();
+            const options = platform === 'android' 
+            ? { clientId: '985142651823-qeanh1ifchgapq2v3g8b5dcq8hgle8ns.apps.googleusercontent.com' } 
+            : undefined;
+
+            const result = await FirebaseAuthentication.signInWithGoogle(options);
             
             const googleUser = result.user;
-            const idToken = result.credential?.idToken;
+
+            let idToken = await getValidToken();
 
             if (!idToken) {
                 throw new Error("Impossibile recuperare il token di autenticazione.");
@@ -38,25 +45,25 @@
                 redirect: "follow"
             };
 
-            // 2. OTTIMIZZAZIONE FETCH:
-            // Usare await rende il codice più pulito e permette al blocco catch 
-            // di intercettare eventuali errori del server PHP MySQL
             const response = await fetch("https://www.basketscore.it/med-app/user/add", requestOptions);
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Errore Server (${response.status}): ${errorText || 'Nessun dettaglio fornito'}`);
+            }
+
             const serverResult = await response.text();
             console.log("Risposta dal server:", serverResult);
 
-            // Aggiorna lo stato globale
             user.isLoggedIn = true;
             user.userInfo = googleUser; 
-            user.token = idToken;
 
             localStorage.setItem("loggedUser", JSON.stringify(user));
+            await loginRevenueCat(user.userInfo?.providerData[0]?.uid);
             
             goto('/home');
 
         } catch (err) {
             console.error("Errore durante il login:", err);
-            // Firebase restituisce spesso oggetti di errore complessi, meglio estrarre il messaggio
             errore = err.message || "Errore sconosciuto durante l'accesso";
         } finally {
             caricamento = false;
@@ -64,9 +71,6 @@
     }
 
     onMount(() => {
-        // 3. SICUREZZA ONMOUNT:
-        // Se è la prima volta che l'utente apre l'app, localStorage restituisce null.
-        // Dobbiamo assicurarci che storedUser esista prima di leggerne le proprietà.
         const localData = localStorage.getItem("loggedUser");
         
         if (localData) {
@@ -76,10 +80,9 @@
         if (user.isLoggedIn) {
             goto('/home');
             from = "memory";
-            return; // Ferma l'esecuzione qui
+            return;
         }
 
-        // Aggiunto il controllo storedUser && ...
         if (storedUser && storedUser.isLoggedIn) {
             user.token = storedUser.token;
             user.userInfo = storedUser.userInfo;
@@ -94,13 +97,13 @@
 <main class="p-6 flex items-center justify-center h-[90vh] w-screen">
     <div>
         <div class="bg-gray-300 text-xs text-gray-600 rounded-xl size-13 flex items-center justify-center">
-        LOGO
+        <img src={appLogo} alt="" class="rounded-xl">
         </div>
         <h1 class="text-4xl font-bold font-epilogue mt-8">Accedi</h1>
-        <p class="text-gray-600 mb-6">Bentornato in UniTest. Accedi con il tuo account Google per continuare.</p>
+        <p class="text-gray-600 dark:text-white mb-6">Bentornato in UniTest. Accedi con il tuo account Google per continuare.</p>
 
         {#if errore}
-            <div class="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm">
+            <div class="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm w-screen max-w-screen">
                 {errore}
             </div>
         {/if}
@@ -123,18 +126,5 @@
                 Continua con Google
             {/if}
         </button>
-
-        {#if user.isLoggedIn}
-            <div class="mt-4">
-                <p class="text-green-600 font-bold">Loggato!</p>
-                <label class="text-xs text-gray-500">token: </label>
-                <input class="w-full text-xs border p-1 rounded" value={user.token} readonly>
-                <br>
-                <label class="text-xs text-gray-500 mt-2">uid:</label>
-                <input class="w-full text-xs border p-1 rounded" value={user.userInfo?.providerData[0]?.uid} readonly>
-            </div>
-        {/if}
-
-        <p class="text-xs text-gray-400 mt-4 text-center">From: {from}</p>
     </div>
 </main>

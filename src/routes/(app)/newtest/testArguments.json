@@ -1,0 +1,8 @@
+{
+    "biologia": ["Biochimica e metabolismo", "Anatomia e fisiologia umana", "Genetica e biologia molecolare", "Microbiologia e virologia", "Biologia cellulare", "Botanica e zoologia", "Evoluzione ed ecologia"],
+    "logica": ["Logica numerica, serie e crittografia", "Logica matematica e problem solving", "Ordinamento e logica relazionale", "Logica deduttiva e formale", "Logica meccanica e fisica", "Logica verbale", "Logica figurale e spaziale", "Interpretazione di grafici e tabelle"],
+    "fisica": ["Termodinamica", "Elettromagnetismo e circuiti", "Meccanica dei fluidi", "Meccanica, cinematica e dinamica"],
+    "matematica": ["Algebra, aritmetica e logica", "Geometria analitica", "Geometria e trigonometria", "Analisi matematica e funzioni"],
+    "chimica": ["Stechiometria e soluzioni", "Legami chimici e geometria molecolare", "Termodinamica, cinetica ed equilibrio", "Struttura dell'atomo e proprietà periodiche", "Acidi, basi e pH", "Elettrochimica e redox", "Chimica organica e biochimica", "Chimica generale e inorganica"],
+    "competenze": ["Educazione civica e diritto", "Compresione del testo e logica", "Storia della scienza e invenzioni", "Letteratura italiana", "Letteratura straniera", "Storia", "Filosofia"]
+}

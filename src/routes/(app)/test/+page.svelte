@@ -6,6 +6,7 @@
     import { user } from "$lib/user.svelte";
     import LoadingScreen from '$lib/loadingScreen.svelte';
     import { documentMatches } from "firebase/firestore/pipelines";
+    import { getValidToken } from "$lib/api";
 
     let openCloseModal = $state(false);
     let showLoading = $state(false);
@@ -58,8 +59,11 @@
         UIselectedAnswer = id;
     }
 
-    onMount(() => {
+    let token = $state(null);
+    
+    onMount(async () => {
         showLoading = true;
+        token = await getValidToken();
         getTest();
         startInterval();
     });
@@ -72,7 +76,7 @@
         if(UIselectedAnswer != null && indexSelectedAnswer != null) {
             const myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
-            myHeaders.append("X-Authorization", "Bearer " + user.token);
+            myHeaders.append("X-Authorization", "Bearer " + token);
 
             const raw = JSON.stringify({
                 "questionId": activeTest?.answers?.[currentQuestionId]?.questionId,
@@ -111,7 +115,7 @@
 
     function getTest() {
         const myHeaders = new Headers();
-        myHeaders.append("X-Authorization", "Bearer " + user.token);
+        myHeaders.append("X-Authorization", "Bearer " + token);
 
         const requestOptions = {
             method: "GET",
@@ -152,7 +156,7 @@
         showLoading = true;
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("X-Authorization", "Bearer " + user.token);
+        myHeaders.append("X-Authorization", "Bearer " + token);
 
         const raw = JSON.stringify({
             "testId": currentTestId

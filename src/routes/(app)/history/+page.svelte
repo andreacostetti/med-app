@@ -4,19 +4,21 @@
     import Testcard from "$lib/test-card.svelte";
     import {onMount} from "svelte";
 
+
     import {user} from "$lib/user.svelte.js";
     import { activeTest } from "$lib/testState.svelte";
     import LoadingScreen from "$lib/loadingScreen.svelte";
+    import { getValidToken } from "$lib/api";
 
     
-
+    let token = $state(null);
     let tests = $state([]);
     let showLoading = $state(false);
 
 
     function getAllTests () {
         const myHeaders = new Headers();
-        myHeaders.append("X-Authorization", "Bearer " + user.token);
+        myHeaders.append("X-Authorization", "Bearer " + token);
 
         const requestOptions = {
             method: "GET",
@@ -38,6 +40,7 @@
 
     onMount(async () => {
         showLoading = true;
+        token = await getValidToken();
         await getAllTests();
     })
 

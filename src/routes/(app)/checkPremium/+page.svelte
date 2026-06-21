@@ -1,4 +1,5 @@
 <script>
+    import { goto } from '$app/navigation';
     import { 
         subscriptionState, 
         presentPaywall, 
@@ -14,6 +15,7 @@
     }
 </script>
 
+<button onclick={() => {goto('/home')}}>back</button>
 <div class="p-6 max-w-md mx-auto mt-10 border rounded-2xl bg-white shadow-sm">
     {#if !subscriptionState.isInitialized}
         <p class="text-gray-500">Loading subscription status...</p>
@@ -49,6 +51,8 @@
 </div>
 
 {#if subscriptionState?.customerInfo}
+    <p>Customer RevenueCat ID: {subscriptionState.customerInfo.originalAppUserId}</p>
+
     <div class="mt-8 p-4 bg-gray-900 text-green-400 text-xs font-mono rounded-lg overflow-auto max-h-64">
         <p class="font-bold text-white mb-2">DEBUG REVENUECAT:</p>
         <p>Entitlement cercato nel codice: 'Pro'</p>
@@ -63,4 +67,6 @@
         
         <pre>{JSON.stringify(subscriptionState, null, 2)}</pre>
     </div>
+
+    
 {/if}

@@ -6,8 +6,6 @@
         openCustomerCenter 
     } from '$lib/revenuecat.svelte.js';
 
-
-
     let {page} = $props();
 </script>
 
@@ -20,7 +18,7 @@
     </div>
     {#if subscriptionState.isInitialized}
         {#if !subscriptionState.hasActiveSubscription}
-            <div class="text-center cursor-pointer" onclick={() => {goto('/premium');}}>
+            <div class="text-center cursor-pointer" onclick={async () => {await presentPaywall()}}>
                 <span class="material-symbols-rounded" style={page == 'premium' ? "font-variation-settings: 'FILL' 1" : ""}>crown</span>
             </div>
         {/if}

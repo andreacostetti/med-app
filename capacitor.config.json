@@ -5,17 +5,14 @@
   "plugins": {
     "StatusBar": {
       "overlapped": false,
+      "overlaysWebView": false,
       "style": "DEFAULT"
     },
     "FirebaseAuthentication": {
       "skipNativeAuth": false,
       "providers": ["google.com"],
       "permissions": ["user.profile", "user.email"],
-      "clientId": "985142651823-n5c623u5foafaab548nskqdqv2u4qajh.apps.googleusercontent.com"
+      "clientId": "985142651823-qeanh1ifchgapq2v3g8b5dcq8hgle8ns.apps.googleusercontent.com"
     }
-  },
-  "server": {
-    "url": "http://192.168.1.12:5173/",
-    "cleartext": true
   }
 }
