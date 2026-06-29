@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">UniTest</string>
-    <string name="title_activity_main">UniTest</string>
+    <string name="app_name">TestUni</string>
+    <string name="title_activity_main">TestUni</string>
     <string name="package_name">com.andreacostetti.unitests</string>
     <string name="custom_url_scheme">com.andreacostetti.unitests</string>
     <string name="server_client_id">985142651823-qeanh1ifchgapq2v3g8b5dcq8hgle8ns.apps.googleusercontent.com</string>

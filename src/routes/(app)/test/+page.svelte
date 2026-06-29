@@ -25,7 +25,8 @@
                 "quiz_biologia": "bio",
                 "quiz_chimica": "chim",
                 "quiz_fismat": "mate",
-                "quiz_logica": "log"
+                "quiz_logica": "log",
+                "quiz_fisica": "mate"
             };
 
             const prefix = tableToPrefix[currentQuestion.subject] || "";

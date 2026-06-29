@@ -1,7 +1,8 @@
 <script>
     import { subscriptionState, presentPaywall } from "$lib/revenuecat.svelte";
-    let {name, checked, argument, nquestions, subjects, img = ""} = $props();
     
+    // Destructuring delle props incluse le funzioni passate dal padre
+    let { name, checked, argument, nquestions, subjects = "", img = "", toggleSelection, showPopup } = $props();
 </script>
 
 <div class="w-full rounded-xl cursor-pointer relative hover:scale-101 transition-transform select-none" onclick={() => {toggleSelection(argument)}}>
@@ -20,6 +21,7 @@
             <span class="material-symbols-rounded">check</span>
         </div>
     {/if}
+    
     {#if argument == "fullTest"}
     <div class="h-36 bg-gray-300 dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 rounded-tl-xl rounded-tr-xl flex items-center justify-center">
         <span class="material-symbols-rounded" style="font-size: 50px; font-variation-settings: 'FILL' 1;">cards_stack</span>
@@ -33,5 +35,4 @@
         <p class="text-gray-500 dark:text-gray-300 text-sm">{nquestions} domande. {subjects}</p>
         <a href="" class="text-sm text-indigo-600 dark:text-indigo-400 active:underline" onclick={(event) => {event.preventDefault(); event.stopPropagation(); showPopup(argument);}}>Vedi argomenti</a>
     </div>
-    
 </div>
