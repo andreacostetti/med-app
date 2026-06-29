@@ -1,6 +1,6 @@
 {
   "appId": "com.andreacostetti.unitests",
-  "appName": "UniTest",
+  "appName": "TestUni",
   "webDir": "build",
   "plugins": {
     "StatusBar": {

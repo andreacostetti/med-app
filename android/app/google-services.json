@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "985142651823-i5om3r1lef1fmq3rdtfndqdoarco88sf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.andreacostetti.unitests",
+            "certificate_hash": "8655cd8083912423bd243ab8b9a3bca9ecfd0bf0"
+          }
+        },
+        {
           "client_id": "985142651823-qeanh1ifchgapq2v3g8b5dcq8hgle8ns.apps.googleusercontent.com",
           "client_type": 3
         }

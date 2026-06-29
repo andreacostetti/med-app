@@ -8,5 +8,12 @@ export default defineConfig({
 		host: true,
 		port: 5173,
 		allowedHosts: ['odometrical-callum-veridically.ngrok-free.dev', '0.0.0.0']
-	}
+	},build: {
+        rollupOptions: {
+            external: ['@capacitor/navigation-bar', '@capacitor/app']
+        }
+    },
+	optimizeDeps: {
+        exclude: ['@capacitor/navigation-bar', '@capacitor/app']
+    }
 });

@@ -7,19 +7,20 @@
     import argumentsList from "./testArguments.json";
     import { getValidToken } from "$lib/api";
     import { subscriptionState, presentPaywall } from "$lib/revenuecat.svelte";
+    import Card from "./newtest-card.svelte";
+    import { onMount } from "svelte";
 
     
     let checked = $state({
         fullTest: false,
         biologia: false,
         chimica: false,
-        fismat: false,
-        competenze: false,
-        logica: false
+        fisica: false
     });
 
     // Variabile per salvare lo stato del test una volta ricevuto dal server
     let tests = $state(null);
+    let phase = $state(0);
 
     let openArgumentsModal = $state(false);
 
@@ -33,9 +34,7 @@
                     fullTest: true,
                     biologia: false,
                     chimica: false,
-                    fismat: false,
-                    competenze: false,
-                    logica: false
+                    fisica: false
                 };
             } else {
                 checked.fullTest = false;
@@ -57,15 +56,13 @@
         if(checked.fullTest) {
             return {
                 type: "mix",
-                subjects: ["biologia", "chimica", "logica", "fismat", "competenze"]
+                subjects: ["biologia", "chimica", "fisica"]
             };
         }
 
         if(checked.biologia) chosenSubjects.push("biologia");
         if(checked.chimica) chosenSubjects.push("chimica");
-        if(checked.logica) chosenSubjects.push("logica");
-        if(checked.fismat) chosenSubjects.push("fismat");
-        if(checked.competenze) chosenSubjects.push("competenze");
+        if(checked.fisica) chosenSubjects.push("fisica");
 
         // Se non è stato selezionato nulla
         if (chosenSubjects.length === 0) {
@@ -80,7 +77,6 @@
             };
         } 
         
-        // Se ha scelto più di una materia singola, diventa un "mix" personalizzato
         return {
             type: "mix",
             subjects: chosenSubjects
@@ -100,7 +96,6 @@
         const myHeaders = new Headers();
         myHeaders.append("X-Authorization", "Bearer " + token);
 
-        // Costruiamo i parametri da passare in GET (es: ?subject=mix&subjects[]=biologia&subjects[]=chimica)
         const params = new URLSearchParams();
         params.append("subject", config.type);
         config.subjects.forEach(sub => {
@@ -136,6 +131,38 @@
         .catch((error) => console.error(error));
     }
 
+    async function getAvailableTests() {
+        let token = await getValidToken();
+
+        const myHeaders = new Headers();
+        myHeaders.append("X-Authorization", "Bearer " + token);
+
+        const requestOptions = {
+            method: "GET",
+            headers: myHeaders,
+            redirect: "follow"
+        };
+
+        fetch("https://www.basketscore.it/med-app/user/getAvailableTests", requestOptions)
+        .then((response) => response.text())
+        .then((result) => {
+            result = JSON.parse(result).data;
+            availableTests = result;
+        })
+        .catch((error) => console.error(error));
+    }
+    let availableTests = $state([]);
+
+    let testSubjects = $state([]);
+
+    function goNextPhase(chosenTestIndex) {
+        let strSubjects = availableTests[chosenTestIndex].subjects;
+
+        testSubjects = strSubjects.split(",");
+
+        phase = 1;
+    }
+
     let argumentsToShow = $state(null);
     function showPopup(arg) {
         if (arg !== "fismat") {
@@ -156,172 +183,157 @@
         }
         openArgumentsModal = true;
     }
+
+    onMount(async () => {
+        await getAvailableTests();
+    }); 
     
 </script>
 
-<main class="p-6 mt-10 mb-12">
+<main class="p-6 mt-4 mb-12">
     <div class="flex items-center gap-1 mb-4 text-gray-700 dark:text-white cursor-pointer" onclick={() => {goto("/home")}}>
         <span class="material-symbols-rounded">arrow_back</span>
         <p class="">Torna alla home</p>
     </div>
     <h1 class="font-bold font-epilogue text-4xl">Nuovo test</h1>
-    <p class="text-gray-600 dark:text-gray-300 mt-1 mb-6">Scegli se svolgere un test completo o selezionare gli argomenti su cui allenarti, poi avvia l'esercitazione.</p>
+    {#if phase == 0}
+    <div>
+        <p class="text-gray-600 dark:text-gray-300 mt-1 mb-6">Scegli per quale test allenarti</p>
 
-    <div class="w-full rounded-xl cursor-pointer relative hover:scale-101 transition-transform select-none" onclick={() => {toggleSelection('fullTest')}}>
-        {#if checked.fullTest}
-            <div class="rounded-lg size-8 flex items-center justify-center bg-indigo-600 border-indigo-600 border text-white absolute top-4 right-4 select-none transition-all">
-                <span class="material-symbols-rounded">check</span>
-            </div>
-        {:else}
-            <div class="rounded-lg size-8 flex items-center justify-center bg-white border-gray-200 border text-gray-400 absolute top-4 right-4 select-none transition-all">
-                <span class="material-symbols-rounded">check</span>
-            </div>
-        {/if}
-        <div class="h-36 bg-gray-300 dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 rounded-tl-xl rounded-tr-xl flex items-center justify-center">
-            <span class="material-symbols-rounded" style="font-size: 50px; font-variation-settings: 'FILL' 1;">cards_stack</span>
-        </div>
-        
-        <div class="w-full bg-white dark:bg-gray-800 p-6 rounded-bl-xl rounded-br-xl">
-            <h3 class="text-lg font-semibold font-epilogue">Test completo</h3>
-            <p class="text-gray-500 dark:text-gray-300 text-sm">3347 domande. Fisica,  Matematica, Biologia, Chimica, Logica e Competenze.</p>
-            <a href="" class="text-sm text-indigo-600 dark:text-indigo-400 active:underline" onclick={(event) => {event.preventDefault(); event.stopPropagation(); showPopup("mix");}}>Vedi argomenti</a>
-        </div>
-        
-    </div>
-    
-    <div class="w-full flex items-center gap-3 my-4">
-        <span class="w-full border border-gray-300 dark:border-gray-700"></span>
-        <p class="text-sm dark:text-gray-300">oppure</p>
-        <span class="w-full border border-gray-300 dark:border-gray-700"></span>
-    </div>
-
-    <div class="w-full flex flex-col gap-6">
-
-        <div class="w-full rounded-xl cursor-pointer relative hover:scale-101 transition-transform select-none" onclick={() => {toggleSelection('biologia')}}>
-            {#if !subscriptionState.hasActiveSubscription} 
-                <div class="rounded-lg flex items-center justify-center text-xs px-2.5 py-0.5 font-medium bg-indigo-600 border-indigo-600 border text-white absolute top-4 left-4 select-none">
-                    Disponibile con Pro
-                </div>
+        <div class="flex flex-col gap-4 w-full">
+            {#if availableTests}
+                {#each availableTests as test, index}
+                    <div class="bg-gray-50 dark:bg-[#222229] rounded-xl border border-gray-100 dark:border-[#3b3b3f] dark:text-white w-full p-3 flex justify-between items-center active:bg-gray-100 dark:active:bg-[#3b3b3f]" onclick={() => {goNextPhase(index)}}>
+                        <div class="flex gap-4 items-center">
+                            <span class="material-symbols-rounded rounded-lg bg-indigo-500 p-2.5 dark:bg-indigo-400 text-white flex items-center justify-center" style="font-size: 27px">{test.icon}</span>
+                            <p class="font-semibold">{test.name}</p>
+                        </div>
+                        <span class="material-symbols-rounded text-white dark:text-gray-300">keyboard_arrow_right</span>
+                    </div>
+                {/each}
             {/if}
-            
-            {#if checked.biologia}
-                <div class="rounded-lg size-8 flex items-center justify-center bg-indigo-600 border-indigo-600 border text-white absolute top-4 right-4 select-none transition-all">
-                    <span class="material-symbols-rounded">check</span>
-                </div>
-            {:else}
-                <div class="rounded-lg size-8 flex items-center justify-center bg-white border-gray-200 border text-gray-400 absolute top-4 right-4 select-none transition-all">
-                    <span class="material-symbols-rounded">check</span>
-                </div>
-            {/if}
-            <img src="https://www.sardegnaricerche.it/immagini/13_398_20170710105342.png" alt="" class="rounded-tl-xl rounded-tr-xl w-full h-36 object-cover">
-            
-            <div class="w-full bg-white dark:bg-gray-800 p-6 rounded-bl-xl rounded-br-xl">
-                <h3 class="text-lg font-semibold font-epilogue">Biologia</h3>
-                <p class="text-gray-500 dark:text-gray-300 text-sm">1190 domande</p>
-                <a href="" class="text-sm text-indigo-600 dark:text-indigo-400 active:underline" onclick={(event) => {event.preventDefault(); event.stopPropagation(); showPopup("biologia");}}>Vedi argomenti</a>
-            </div>
-        </div>
-        
-        <div class="w-full rounded-xl cursor-pointer relative hover:scale-101 transition-transform select-none" onclick={() => {toggleSelection('fismat')}}>
-            {#if !subscriptionState.hasActiveSubscription} 
-                <div class="rounded-lg flex items-center justify-center text-xs px-2.5 py-0.5 font-medium bg-indigo-600 border-indigo-600 border text-white absolute top-4 left-4 select-none">
-                    Disponibile con Pro
-                </div>
-            {/if}
-            
-            {#if checked.fismat}
-                <div class="rounded-lg size-8 flex items-center justify-center bg-indigo-600 border-indigo-600 border text-white absolute top-4 right-4 select-none transition-all">
-                    <span class="material-symbols-rounded">check</span>
-                </div>
-            {:else}
-                <div class="rounded-lg size-8 flex items-center justify-center bg-white border-gray-200 border text-gray-400 absolute top-4 right-4 select-none transition-all">
-                    <span class="material-symbols-rounded">check</span>
-                </div>
-            {/if}
-            <img src="https://img.magnific.com/foto-gratuito/tavola-incisa-con-formule-e-calcoli-scientifici_1150-19413.jpg?semt=ais_hybrid&w=740&q=80" alt="" class="rounded-tl-xl rounded-tr-xl w-full h-36 object-cover">
-            
-            <div class="w-full bg-white dark:bg-gray-800 p-6 rounded-bl-xl rounded-br-xl">
-                <h3 class="text-lg font-semibold font-epilogue">Matematica e Fisica</h3>
-                <p class="text-gray-500 dark:text-gray-300 text-sm">770 domande</p>
-                <a href="" class="text-sm text-indigo-600 dark:text-indigo-400 active:underline" onclick={(event) => {event.preventDefault(); event.stopPropagation(); showPopup("fismat");}}>Vedi argomenti</a>
-            </div>
-        </div>
-
-        <div class="w-full rounded-xl cursor-pointer relative hover:scale-101 transition-transform select-none mb-4" onclick={() => {toggleSelection('chimica')}}>
-            {#if !subscriptionState.hasActiveSubscription} 
-                <div class="rounded-lg flex items-center justify-center text-xs px-2.5 py-0.5 font-medium bg-indigo-600 border-indigo-600 border text-white absolute top-4 left-4 select-none">
-                    Disponibile con Pro
-                </div>
-            {/if}
-            
-            {#if checked.chimica}
-                <div class="rounded-lg size-8 flex items-center justify-center bg-indigo-600 border-indigo-600 border text-white absolute top-4 right-4 select-none transition-all">
-                    <span class="material-symbols-rounded">check</span>
-                </div>
-            {:else}
-                <div class="rounded-lg size-8 flex items-center justify-center bg-white border-gray-200 border text-gray-400 absolute top-4 right-4 select-none transition-all">
-                    <span class="material-symbols-rounded">check</span>
-                </div>
-            {/if}
-            <img src="https://www.maja.it/wp-content/uploads/2019/07/shutterstock_446601703.jpg" alt="" class="rounded-tl-xl rounded-tr-xl w-full h-36 object-cover">
-            
-            <div class="w-full bg-white dark:bg-gray-800 p-6 rounded-bl-xl rounded-br-xl">
-                <h3 class="text-lg font-semibold font-epilogue">Chimica</h3>
-                <p class="text-gray-500 dark:text-gray-300 text-sm">1015 domande</p>
-                <a href="" class="text-sm text-indigo-600 dark:text-indigo-400 active:underline" onclick={(event) => {event.preventDefault(); event.stopPropagation(); showPopup("chimica");}}>Vedi argomenti</a>
-            </div>
-        </div>
-
-        <div class="w-full rounded-xl cursor-pointer relative hover:scale-101 transition-transform select-none mb-4" onclick={() => {toggleSelection('logica')}}>
-            {#if !subscriptionState.hasActiveSubscription} 
-                <div class="rounded-lg flex items-center justify-center text-xs px-2.5 py-0.5 font-medium bg-indigo-600 border-indigo-600 border text-white absolute top-4 left-4 select-none">
-                    Disponibile con Pro
-                </div>
-            {/if}
-            
-            {#if checked.logica}
-                <div class="rounded-lg size-8 flex items-center justify-center bg-indigo-600 border-indigo-600 border text-white absolute top-4 right-4 select-none transition-all">
-                    <span class="material-symbols-rounded">check</span>
-                </div>
-            {:else}
-                <div class="rounded-lg size-8 flex items-center justify-center bg-white border-gray-200 border text-gray-400 absolute top-4 right-4 select-none transition-all">
-                    <span class="material-symbols-rounded">check</span>
-                </div>
-            {/if}
-            <img src="https://www.italiainminiatura.com/data/thumb_cache/_data_pagine_img_logica-mente-_npgtjq_jpg_cr_767_500.jpg" alt="" class="rounded-tl-xl rounded-tr-xl w-full h-36 object-cover">
-            
-            <div class="w-full bg-white dark:bg-gray-800 p-6 rounded-bl-xl rounded-br-xl">
-                <h3 class="text-lg font-semibold font-epilogue">Logica</h3>
-                <p class="text-gray-500 dark:text-gray-300 text-sm">280 domande</p>
-                <a href="" class="text-sm text-indigo-600 dark:text-indigo-400 active:underline" onclick={(event) => {event.preventDefault(); event.stopPropagation(); showPopup("logica");}}>Vedi argomenti</a>
-            </div>
-        </div>
-
-        <div class="w-full rounded-xl cursor-pointer relative hover:scale-101 transition-transform select-none mb-4" onclick={() => {toggleSelection('competenze')}}>
-            {#if !subscriptionState.hasActiveSubscription} 
-                <div class="rounded-lg flex items-center justify-center text-xs px-2.5 py-0.5 font-medium bg-indigo-600 border-indigo-600 border text-white absolute top-4 left-4 select-none">
-                    Disponibile con Pro
-                </div>
-            {/if}
-            
-            {#if checked.competenze}
-                <div class="rounded-lg size-8 flex items-center justify-center bg-indigo-600 border-indigo-600 border text-white absolute top-4 right-4 select-none transition-all">
-                    <span class="material-symbols-rounded">check</span>
-                </div>
-            {:else}
-                <div class="rounded-lg size-8 flex items-center justify-center bg-white border-gray-200 border text-gray-400 absolute top-4 right-4 select-none transition-all">
-                    <span class="material-symbols-rounded">check</span>
-                </div>
-            {/if}
-            <img src="https://pennablu.it/img/pagine-dizionario.jpg" alt="" class="rounded-tl-xl rounded-tr-xl w-full h-36 object-cover">
-            
-            <div class="w-full bg-white dark:bg-gray-800 p-6 rounded-bl-xl rounded-br-xl">
-                <h3 class="text-lg font-semibold font-epilogue">Competenze</h3>
-                <p class="text-gray-500 text-sm">245 domande</p>
-                <a href="" class="text-sm text-indigo-600 dark:text-indigo-400 active:underline" onclick={(event) => {event.preventDefault(); event.stopPropagation(); showPopup("competenze");}}>Vedi argomenti</a>
-            </div>
         </div>
     </div>
+    {:else if phase == 1}
+    <div>
+        <p class="text-gray-600 dark:text-gray-300 mt-1 mb-6">Scegli se svolgere un test completo o selezionare gli argomenti su cui allenarti, poi avvia l'esercitazione.</p>
+
+        <div class="w-full rounded-xl cursor-pointer relative hover:scale-101 transition-transform select-none" onclick={() => {toggleSelection('fullTest')}}>
+            {#if checked.fullTest}
+                <div class="rounded-lg size-8 flex items-center justify-center bg-indigo-600 border-indigo-600 border text-white absolute top-4 right-4 select-none transition-all">
+                    <span class="material-symbols-rounded">check</span>
+                </div>
+            {:else}
+                <div class="rounded-lg size-8 flex items-center justify-center bg-white border-gray-200 border text-gray-400 absolute top-4 right-4 select-none transition-all">
+                    <span class="material-symbols-rounded">check</span>
+                </div>
+            {/if}
+            <div class="h-36 bg-gray-300 dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 rounded-tl-xl rounded-tr-xl flex items-center justify-center">
+                <span class="material-symbols-rounded" style="font-size: 50px; font-variation-settings: 'FILL' 1;">cards_stack</span>
+            </div>
+            
+            <div class="w-full bg-white dark:bg-gray-800 p-6 rounded-bl-xl rounded-br-xl">
+                <h3 class="text-lg font-semibold font-epilogue">Test completo</h3>
+                <p class="text-gray-500 dark:text-gray-300 text-sm">2538 domande. Fisica, Biologia e Chimica.</p>
+                <a href="" class="text-sm text-indigo-600 dark:text-indigo-400 active:underline" onclick={(event) => {event.preventDefault(); event.stopPropagation(); showPopup("mix");}}>Vedi argomenti</a>
+            </div>
+            
+        </div>
+
+        <!-- <Card name="Test completo" nquestions=2538 subjects="Fisica, Biologia e Chimica" argument="fullTest" checked={checked.fullTest} />-->
+        
+        
+        <div class="w-full flex items-center gap-3 my-4">
+            <span class="w-full border border-gray-300 dark:border-gray-700"></span>
+            <p class="text-sm dark:text-gray-300">oppure</p>
+            <span class="w-full border border-gray-300 dark:border-gray-700"></span>
+        </div>
+
+        <div class="w-full flex flex-col gap-6">
+
+            {#if testSubjects}
+                {#each testSubjects as subj}
+                    <Card name={subj.name} nquestions={subj.nQuestions} argument={subj.subjectId} checked={checked[subj.subjectId]} img={subj.img}/>
+                {/each}
+            {/if}
+
+            <!-- <div class="w-full rounded-xl cursor-pointer relative hover:scale-101 transition-transform select-none" onclick={() => {toggleSelection('biologia')}}>
+                {#if !subscriptionState.hasActiveSubscription} 
+                    <div class="rounded-lg flex items-center justify-center text-xs px-2.5 py-0.5 font-medium bg-indigo-600 border-indigo-600 border text-white absolute top-4 left-4 select-none">
+                        Disponibile con Pro
+                    </div>
+                {/if}
+                
+                {#if checked.biologia}
+                    <div class="rounded-lg size-8 flex items-center justify-center bg-indigo-600 border-indigo-600 border text-white absolute top-4 right-4 select-none transition-all">
+                        <span class="material-symbols-rounded">check</span>
+                    </div>
+                {:else}
+                    <div class="rounded-lg size-8 flex items-center justify-center bg-white border-gray-200 border text-gray-400 absolute top-4 right-4 select-none transition-all">
+                        <span class="material-symbols-rounded">check</span>
+                    </div>
+                {/if}
+                <img src="https://www.sardegnaricerche.it/immagini/13_398_20170710105342.png" alt="" class="rounded-tl-xl rounded-tr-xl w-full h-36 object-cover">
+                
+                <div class="w-full bg-white dark:bg-gray-800 p-6 rounded-bl-xl rounded-br-xl">
+                    <h3 class="text-lg font-semibold font-epilogue">Biologia</h3>
+                    <p class="text-gray-500 dark:text-gray-300 text-sm">1223 domande</p>
+                    <a href="" class="text-sm text-indigo-600 dark:text-indigo-400 active:underline" onclick={(event) => {event.preventDefault(); event.stopPropagation(); showPopup("biologia");}}>Vedi argomenti</a>
+                </div>
+            </div>
+            
+            <div class="w-full rounded-xl cursor-pointer relative hover:scale-101 transition-transform select-none" onclick={() => {toggleSelection('fisica')}}>
+                {#if !subscriptionState.hasActiveSubscription} 
+                    <div class="rounded-lg flex items-center justify-center text-xs px-2.5 py-0.5 font-medium bg-indigo-600 border-indigo-600 border text-white absolute top-4 left-4 select-none">
+                        Disponibile con Pro
+                    </div>
+                {/if}
+                
+                {#if checked.fisica}
+                    <div class="rounded-lg size-8 flex items-center justify-center bg-indigo-600 border-indigo-600 border text-white absolute top-4 right-4 select-none transition-all">
+                        <span class="material-symbols-rounded">check</span>
+                    </div>
+                {:else}
+                    <div class="rounded-lg size-8 flex items-center justify-center bg-white border-gray-200 border text-gray-400 absolute top-4 right-4 select-none transition-all">
+                        <span class="material-symbols-rounded">check</span>
+                    </div>
+                {/if}
+                <img src="https://img.magnific.com/foto-gratuito/tavola-incisa-con-formule-e-calcoli-scientifici_1150-19413.jpg?semt=ais_hybrid&w=740&q=80" alt="" class="rounded-tl-xl rounded-tr-xl w-full h-36 object-cover">
+                
+                <div class="w-full bg-white dark:bg-gray-800 p-6 rounded-bl-xl rounded-br-xl">
+                    <h3 class="text-lg font-semibold font-epilogue">Fisica</h3>
+                    <p class="text-gray-500 dark:text-gray-300 text-sm">466 domande</p>
+                    <a href="" class="text-sm text-indigo-600 dark:text-indigo-400 active:underline" onclick={(event) => {event.preventDefault(); event.stopPropagation(); showPopup("fisica");}}>Vedi argomenti</a>
+                </div>
+            </div>
+
+            <div class="w-full rounded-xl cursor-pointer relative hover:scale-101 transition-transform select-none mb-4" onclick={() => {toggleSelection('chimica')}}>
+                {#if !subscriptionState.hasActiveSubscription} 
+                    <div class="rounded-lg flex items-center justify-center text-xs px-2.5 py-0.5 font-medium bg-indigo-600 border-indigo-600 border text-white absolute top-4 left-4 select-none">
+                        Disponibile con Pro
+                    </div>
+                {/if}
+                
+                {#if checked.chimica}
+                    <div class="rounded-lg size-8 flex items-center justify-center bg-indigo-600 border-indigo-600 border text-white absolute top-4 right-4 select-none transition-all">
+                        <span class="material-symbols-rounded">check</span>
+                    </div>
+                {:else}
+                    <div class="rounded-lg size-8 flex items-center justify-center bg-white border-gray-200 border text-gray-400 absolute top-4 right-4 select-none transition-all">
+                        <span class="material-symbols-rounded">check</span>
+                    </div>
+                {/if}
+                <img src="https://www.maja.it/wp-content/uploads/2019/07/shutterstock_446601703.jpg" alt="" class="rounded-tl-xl rounded-tr-xl w-full h-36 object-cover">
+                
+                <div class="w-full bg-white dark:bg-gray-800 p-6 rounded-bl-xl rounded-br-xl">
+                    <h3 class="text-lg font-semibold font-epilogue">Chimica</h3>
+                    <p class="text-gray-500 dark:text-gray-300 text-sm">1131 domande</p>
+                    <a href="" class="text-sm text-indigo-600 dark:text-indigo-400 active:underline" onclick={(event) => {event.preventDefault(); event.stopPropagation(); showPopup("chimica");}}>Vedi argomenti</a>
+                </div>
+            </div>-->
+        </div>
+    </div>
+    {/if}
 
 </main>
 
@@ -359,7 +371,7 @@
 {/if}
 
 {#if showButton}
-    <div class="w-screen bg-[#FAFAFA] dark:bg-[#1B1B23] fixed bottom-0 left-0 p-4 px-8 pb-8" transition:fly={{ y: 20, duration: 300, easing: cubicOut }}>
+    <div class="w-screen bg-[#FAFAFA] dark:bg-[#1B1B23] fixed bottom-0 left-0 p-4 px-8 pb-[calc(env(safe-area-inset-bottom)+32px)]" transition:fly={{ y: 20, duration: 300, easing: cubicOut }}>
         <button class="bg-indigo-600 text-white w-full text-md font-semibold rounded-xl h-11 cursor-pointer" onclick={() => {createTest()}}>Inizia test</button>
     </div>
 {/if}

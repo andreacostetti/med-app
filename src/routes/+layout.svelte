@@ -2,11 +2,12 @@
     import './layout.css';
     import favicon from '$lib/assets/favicon.svg';
     import { Capacitor } from '@capacitor/core';
+    import { page } from '$app/stores';
     import { StatusBar, Style } from '@capacitor/status-bar';
     import { onMount } from 'svelte';
-    import { initRevenueCat } from '$lib/revenuecat.svelte';
-    //import { FirebaseCrashlytics } from '@capacitor-firebase/crashlytics';
-    //import { FirebasePerformance } from '@capacitor-firebase/performance';
+    import { syncRevenueCatUser } from '$lib/revenuecat.svelte.js';
+    import { user } from '$lib/user.svelte';
+    import {initPushNotifications } from "$lib/pushNotifications";
     
     let { children } = $props();
 
@@ -15,23 +16,19 @@
 
     onMount(async () => {
 		isAndroid = Capacitor.getPlatform() === 'android';
+
+        await initPushNotifications();
+
         if (Capacitor.isNativePlatform()) {
             try {
                 await StatusBar.show();
                 await StatusBar.setOverlaysWebView({ overlay: false });
-
-                //await FirebaseCrashlytics.setCrashlyticsCollectionEnabled({ enabled: true });
-                //await FirebasePerformance.setPerformanceCollectionEnabled({ enabled: true });
-                //await FirebaseCrashlytics.setUserId({ userId: 'ID_UTENTE_SE_DISPONIBILE' });
             } catch (err) {
                 console.error("Errore inizializzazione StatusBar:", err);
             }
         }
-
-        // 2. Inizializza RevenueCat
-        initRevenueCat();
         
-        // 3. Gestione Dark Mode
+        // 3. Dark Mode
         const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
         isDarkMode = mediaQuery.matches;
 
@@ -54,14 +51,24 @@
         }
     });
 
+    $effect(() => {
+        let currentUid = user.userInfo?.providerData?.[0]?.uid || null;
+        syncRevenueCatUser(currentUid);
+    });
+
     async function updateNativeStatusBar(dark) {
         try {
+            const { NavigationBar } = await import('@capacitor/navigation-bar');
+
             if (dark) {
                 await StatusBar.setStyle({ style: Style.Dark });
                 await StatusBar.setBackgroundColor({ color: '#16161d' }); 
+
+                await NavigationBar.setColor({ color: '#1B1B23', darkButtons: false });
             } else {
                 await StatusBar.setStyle({ style: Style.Light });
                 await StatusBar.setBackgroundColor({ color: '#ffffff' }); 
+                await NavigationBar.setColor({ color: '#ffffff', darkButtons: true });
             }
         } catch (error) {
             console.error('Failed to update status bar:', error);

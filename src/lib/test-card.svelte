@@ -53,12 +53,10 @@
                 {#if superato == 1}
                     <div class="rounded-full shrink-0 text-xs font-bold uppercase tracking-wide flex items-center gap-1.5 px-3 py-1.5 justify-center bg-green-100 dark:bg-green-500/10 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-500/20 shadow-sm">
                         <span class="material-symbols-rounded" style="font-size: 16px;">check_circle</span>
-                        <p>Superato</p>
                     </div>
                 {:else if superato == 0}
                     <div class="rounded-full shrink-0 text-xs font-bold uppercase tracking-wide flex items-center gap-1.5 px-3 py-1.5 justify-center bg-red-100 dark:bg-red-500/10 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-500/20 shadow-sm">
                         <span class="material-symbols-rounded" style="font-size: 16px;">cancel</span>
-                        <p>Non superato</p> 
                     </div>
                 {/if}
         {/if}   
@@ -75,7 +73,7 @@
             <div class="w-px h-10 bg-gray-200 dark:bg-[#45454b]"></div>
             <div class="flex-1">
                 <p class="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider">Risposte corrette</p>
-                <p class="text-sm font-bold text-gray-700 dark:text-gray-200 mt-1">{ncorrect} <span class="text-gray-400 dark:text-gray-500 font-normal">/ {nquestions}</span></p>
+                <p class="text-md font-bold text-gray-700 dark:text-gray-100 mt-1">{ncorrect} <span class="text-gray-400 dark:text-gray-300 font-normal text-sm">/ {nquestions}</span></p>
             </div>
         </div>
     {/if}
@@ -101,7 +99,7 @@
         </div>
     {/if}
 
-    {#if materia == "mix" && argomenti?.length > 0}
+    <!-- {#if materia == "mix" && argomenti?.length > 0}
         <div class="mt-6 pt-5 border-t border-gray-100 dark:border-[#3b3b3f]">
             <p class="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3">Argomenti del test</p>
             <div class="flex flex-wrap gap-2">
@@ -112,7 +110,7 @@
                 {/each}
             </div>
         </div>
-    {/if}
+    {/if} -->
 
     {#if completed == 1}
         <div class="mt-6">

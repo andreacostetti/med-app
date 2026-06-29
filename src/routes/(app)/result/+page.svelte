@@ -6,17 +6,23 @@
     import LoadingScreen from "$lib/loadingScreen.svelte";
     import { getValidToken } from "$lib/api";
     import aiIcon from '$lib/assets/ai-sparkle-icon.png';
+    import AiPopup from "./aipopup.svelte";
 
     import { 
         subscriptionState, 
         presentPaywall, 
         openCustomerCenter 
     } from '$lib/revenuecat.svelte.js';
+    import { json } from '@sveltejs/kit';
+    import { getAI } from 'firebase/ai';
     
 
     let testId = $state(localStorage.getItem('lastTestId'));
     let data = $state(null);
     let showLoading = $state(false);
+    let aiResponse = $state(null);
+    let aiLoading = $state(false);
+    let showAiPopup = $state(false);
 
 	function partyBoom() {
 		confetti({
@@ -48,6 +54,48 @@
             data = result;
             showLoading = false;
         }) 
+        .catch((error) => console.error(error));
+    }
+
+    async function getAiExplanation(questIndex) {
+        showAiPopup = true;
+        aiLoading = true;
+
+        let token = await getValidToken();
+        let question = answersToShow[questIndex];
+
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("X-Authorization", "Bearer " + token);
+
+        let userans;
+        if(question.userAnswer == -1) {
+            userans = "Risposta non data";
+        } else {
+            userans = question["ans_" + question.userAnswer]
+        }
+
+        const raw = JSON.stringify({
+            "correct_ans": question["ans_" + question.correct_idx],
+            "question": question.question,
+            "question_id": question.id,
+            "subject": question.subject,
+            "user_ans": userans
+        });
+
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: raw,
+            redirect: "follow"
+        };
+
+        fetch("https://www.basketscore.it/med-app/test/explainAi", requestOptions)
+        .then((response) => response.text())
+        .then((result) => {
+            aiResponse = JSON.parse(result).explanation;
+            aiLoading = false;
+        })
         .catch((error) => console.error(error));
     }
 
@@ -90,6 +138,8 @@
             return "Competenze";
         } else if(n == "logica") {
             return "Logica";
+        } else if(n == "Fisica") {
+            return "Fisica";
         }
     }
 
@@ -184,11 +234,12 @@
                             <span class="material-symbols-rounded text-emerald-500 w-fit ml-3">check</span>
                         </div>
 
-                        
-                        <!-- <button class="flex items-center gap-1.5 mt-4" onclick={subscriptionState.hasActiveSubscription ? askAI() : presentPaywall()}>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-5 fill-indigo-600" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 512 480.24"><path fill-rule="nonzero" d="M512 220.6c-163.88 61.72-149.02 38.94-206.92 208.29-57.91-169.35-43.06-146.57-206.92-208.26 163.86-61.72 149.01-38.95 206.92-208.3C362.98 181.68 348.12 158.91 512 220.6zM193.38 382.9c-76.59 28.86-69.65 18.21-96.71 97.34C69.63 401.11 76.59 411.76 0 382.9c76.59-28.81 69.63-18.15 96.67-97.31 27.06 79.16 20.12 68.5 96.71 97.31zm8.2-316.66c-52.13 19.66-47.41 12.38-65.81 66.28-18.43-53.86-13.69-46.62-65.84-66.28C122.08 46.63 117.34 53.87 135.77 0c18.4 53.87 13.68 46.63 65.81 66.24z"/></svg>
-                            <p class="tracking-wide text-xs font-semibold text-indigo-500 underline">Spiega l'errore</p>
-                        </button>-->
+                        {#if ans.img == 0}
+                            <button class="flex items-center gap-1.5 mt-4" onclick={async () => {subscriptionState.hasActiveSubscription ? await getAiExplanation(index) : presentPaywall()}}>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="size-5 fill-indigo-600" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 512 480.24"><path fill-rule="nonzero" d="M512 220.6c-163.88 61.72-149.02 38.94-206.92 208.29-57.91-169.35-43.06-146.57-206.92-208.26 163.86-61.72 149.01-38.95 206.92-208.3C362.98 181.68 348.12 158.91 512 220.6zM193.38 382.9c-76.59 28.86-69.65 18.21-96.71 97.34C69.63 401.11 76.59 411.76 0 382.9c76.59-28.81 69.63-18.15 96.67-97.31 27.06 79.16 20.12 68.5 96.71 97.31zm8.2-316.66c-52.13 19.66-47.41 12.38-65.81 66.28-18.43-53.86-13.69-46.62-65.84-66.28C122.08 46.63 117.34 53.87 135.77 0c18.4 53.87 13.68 46.63 65.81 66.24z"/></svg>
+                                <p class="tracking-wide text-xs font-semibold text-indigo-500 underline">Spiega l'errore</p>
+                            </button>
+                        {/if}
 
                     </div>
                     {#if !subscriptionState.hasActiveSubscription && index === 5}
@@ -228,16 +279,15 @@
             {/if}
 
         {/each}
-        
-    
-        
     </div>
-
-    
 </main>
 
 {#if showLoading}
     <LoadingScreen />
+{/if}
+
+{#if showAiPopup}
+    <AiPopup loading={aiLoading} explanation={aiResponse} onClose={() => {showAiPopup = false}} />
 {/if}
 
 

@@ -130,6 +130,7 @@
 <main class="p-6 mb-20">
     <h1 class="font-bold font-epilogue text-4xl mb-2 mt-4">Bentornato, {user.userInfo ? getName(user.userInfo?.displayName) : ""}.</h1>
     <p class="text-gray-500 dark:text-gray-300">Dove eravamo rimasti?</p> <!-- qui potrebbero girare più frasi a rotazione, salvate in un json -->
+    
 
     <!--<div class="flex items-center w-full gap-1 bg-white  px-4 py-2 border border-px border-gray-200 dark:bg-[#222229] dark:border-[#3b3b3f] rounded-xl mt-3 mb-5">
         <span class="material-symbols-rounded text-orange-400" style="font-size: 28px; font-variation-settings: 'FILL' 1;">local_fire_department</span>
@@ -142,7 +143,7 @@
     {/if}
 
     {#if data?.allTestCompleted == false}
-    <div class="bg-indigo-600 p-6 rounded-xl w-full text-white flex flex-col justify-between hover:scale-101 transition-transform" onclick={() => {openTest(data?.notCompleted.id)}}>
+    <div class="bg-indigo-600 p-6 mt-6 rounded-xl w-full text-white flex flex-col justify-between hover:scale-101 transition-transform" onclick={() => {openTest(data?.notCompleted.id)}}>
         <div class="mb-20">
             <div class="flex items-center px-3 py-1 gap-2 bg-indigo-500 w-fit rounded-full tracking-wide text-sm border border-2 border-indigo-500 mb-5">
                 <div class="size-2.5 bg-green-500 rounded-full"></div>

@@ -8,7 +8,7 @@
 
     onMount(() => {
         if(!user.isLoggedIn) {
-            goto('/login');
+            goto('/');
         }
     })
 	

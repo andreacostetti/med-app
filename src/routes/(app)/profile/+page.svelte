@@ -5,6 +5,7 @@
     import { user } from '$lib/user.svelte.js'; // Importiamo lo stato globale
     import { onMount } from "svelte";
     import googleLogo from "$lib/assets/googleLogo.webp";
+    import { Capacitor } from "@capacitor/core";
     import { 
         subscriptionState, 
         presentPaywall, 
@@ -17,9 +18,11 @@
         const localData = localStorage.getItem("loggedUser");
         if (!user.isLoggedIn && !localData) {
             await logoutRevenueCat();
-            goto("/login");
+            goto("/");
         }
     });
+
+    let appVersion = "0.2";
 
     async function disconnetti() {
         // 1. Resetta lo stato globale del Rune in Svelte 5
@@ -31,7 +34,7 @@
         await logoutRevenueCat();
 
         // 3. Torna alla schermata di login
-        goto("/login");
+        goto("/");
     }
 
     function formatDate(dataString) {
@@ -106,7 +109,7 @@
                     <span class="material-symbols-rounded text-green-500">check_circle</span>
                 {/if}
                 <div>
-                    <p class="font-semibold text-sm text-gray-900 dark:text-white">UniTests Pro</p>
+                    <p class="font-semibold text-sm text-gray-900 dark:text-white">TestUni Pro</p>
                     {#if subscriptionState.hasActiveSubscription}
                         <p class="text-xs text-gray-500 dark:text-gray-300">Attivo</p>
                         <p class="text-xs text-gray-500 dark:text-gray-300">dal {formatDate(subscriptionState.customerInfo?.entitlements.active['Pro']?.originalPurchaseDate)}</p>
@@ -115,9 +118,7 @@
                     {/if}
                 </div>
             </div>
-            {#if subscriptionState.hasActiveSubscription}
-                <button class="text-xs font-bold text-indigo-600 dark:text-indigo-500 hover:underline" onclick={openCustomerCenter}>Gestisci</button>
-            {:else}
+            {#if !subscriptionState.hasActiveSubscription}
                 <button class="text-xs font-bold text-indigo-600 dark:text-indigo-500 hover:underline" onclick={async () => {await presentPaywall()}}>Scopri di più</button>
             {/if}
             
@@ -126,10 +127,38 @@
         <div class="p-4 bg-white dark:bg-[#1B1B23] border border-gray-100 dark:border-gray-800 rounded-xl flex justify-between items-center">
             <div>
                 <p class="font-semibold text-sm text-gray-900 dark:text-white">ID Utente</p>
-                <p class="text-xs text-gray-400 font-mono truncate max-w-[180px]">{user.userInfo?.providerData[0]?.uid || 'Non disponibile'}</p>
+                <p class="text-xs text-gray-400 font-mono truncate max-w-full">{user.userInfo?.providerData[0]?.uid || 'Non disponibile'}</p>
             </div>
         </div>
+
+        <!--<div class="p-4 bg-white dark:bg-[#1B1B23] border border-gray-100 dark:border-gray-800 rounded-xl flex justify-between items-center">
+            <div>
+                <p class="font-semibold text-sm text-gray-900 dark:text-white">RevenueCat user id</p>
+                <p class="text-xs text-gray-400 font-mono truncate max-w-full">{subscriptionState?.customerInfo?.originalAppUserId || 'Non disponibile'}</p>
+            </div>
+        </div>
+
+         <div class="p-4 bg-white dark:bg-[#1B1B23] border border-gray-100 dark:border-gray-800 rounded-xl flex justify-between items-center">
+            <div>
+                <p class="font-semibold text-sm text-gray-900 dark:text-white">RevenueCat</p>
+                <p class="text-xs text-gray-400 font-mono truncate max-w-full">{user.userInfo?.providerData[0]?.uid || 'Non disponibile'}</p>
+            </div>
+        </div>
+
+        <div class="p-4 bg-white dark:bg-[#1B1B23] border border-gray-100 dark:border-gray-800 rounded-xl flex justify-between items-center">
+            <div>
+                <p class="font-semibold text-sm text-gray-900 dark:text-white">RevenueCat user id</p>
+                <p class="text-xs text-gray-400 font-mono truncate max-w-full">{user.userInfo?.providerData[0]?.uid || 'Non disponibile'}</p>
+            </div>
+        </div>-->
     </div>
+
+        <!-- <button 
+            onclick={() => {goto('/checkPremium')}}
+            class="w-full rounded-xl py-3 border border-indigo-200 dark:border-indigo-900/30 text-indigo-600 dark:text-indigo-400 font-semibold text-sm cursor-pointer hover:bg-indigo-50 dark:hover:bg-indigo-950/20 transition-colors text-center"
+        >
+            Controlla premium
+        </button> -->
 
     <div class="mt-12 flex flex-col gap-3">
         <button 
@@ -139,6 +168,8 @@
             Esci
         </button>
     </div>
+
+    <p class="text-xs text-gray-400 dark:text-gray-500 w-full text-center mt-2">Versione {appVersion}</p>
 </main>
 
 <BottomBar page='profile'/>
