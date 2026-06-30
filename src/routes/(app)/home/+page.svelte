@@ -128,7 +128,7 @@
 <Navbar/>
 
 <main class="p-6 mb-20">
-    <h1 class="font-bold font-epilogue text-4xl mb-2 mt-4">Bentornato, {user.userInfo ? getName(user.userInfo?.displayName) : ""}.</h1>
+    <h1 class="font-bold font-epilogue text-3xl mb-2 mt-4">Bentornato, {user.userInfo ? getName(user.userInfo?.displayName) : ""}.</h1>
     <p class="text-gray-500 dark:text-gray-300">Dove eravamo rimasti?</p> <!-- qui potrebbero girare più frasi a rotazione, salvate in un json -->
     
 
@@ -149,7 +149,7 @@
                 <div class="size-2.5 bg-green-500 rounded-full"></div>
                 <p>{data?.notCompleted.completion_percentage}% completato</p>
             </div>
-            <h3 class="font-epilogue text-3xl font-semibold mb-2">Riprendi l'ultimo test</h3>
+            <h3 class="font-epilogue text-2xl font-semibold mb-2">Riprendi l'ultimo test</h3>
             <p class="font-light text-indigo-200/90">{materieMap[data?.notCompleted.subject]?.nome}</p>
         </div>
         <div class="flex items-center justify-between w-full gap-6 text-indigo-200/90">

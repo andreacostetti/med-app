@@ -11,7 +11,7 @@
 >
     
     <div 
-        class="w-full max-w-[500px] rounded-t-[26px] bg-white dark:bg-gray-700 dark:text-white p-5 pb-[calc(env(safe-area-inset-bottom)+32px)] shadow-[0_-5px_20px_rgba(0,0,0,0.15)]"
+        class="w-full rounded-t-[26px] bg-white dark:bg-gray-700 dark:text-white p-5 pb-[calc(env(safe-area-inset-bottom)+32px)] shadow-[0_-5px_20px_rgba(0,0,0,0.15)]"
         transition:fly={{ y: 500, duration: 400, easing: cubicOut }}
         onclick={(e) => e.stopPropagation()}>
         <div class="mx-auto mb-4 h-1.5 w-10 rounded-full bg-gray-300 dark:bg-gray-600"></div>

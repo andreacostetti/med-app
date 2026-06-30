@@ -228,7 +228,7 @@
         <button class="cursor-pointer p-1 bg-white flex items-center justify-center rounded-xl border border-gray-200 active:bg-gray-100 dark:bg-[#393941] dark:active:bg-[#42424c] dark:border-[#59595e] transition-colors focus:ring-2 ring-gray-100" onclick={() => {openCloseModal = true;}}><span class="material-symbols-rounded">close</span></button>
     </div>
 
-    <h1 class="text-3xl font-semibold font-epilogue">{@html text}</h1>
+    <h1 class="text-2xl font-semibold font-epilogue">{@html text}</h1>
 
     {#if currentHasImg === 1}
         <div class="w-full mt-6 flex justify-center bg-white dark:bg-[#393941] p-2 rounded-xl border border-gray-200 dark:border-[#59595e] shadow-xs">

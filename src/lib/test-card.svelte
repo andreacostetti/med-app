@@ -79,21 +79,24 @@
     {/if}
 
     {#if completed == 0}
-        <div class="mt-6 flex items-center gap-4 p-4 rounded-xl bg-indigo-50/50 dark:bg-indigo-500/5 border border-indigo-100 dark:border-indigo-500/10">
-            <div class="relative size-14 flex items-center justify-center shrink-0">
-                <svg class="size-full -rotate-90 transform" viewBox="0 0 48 48">
-                    <circle cx="24" cy="24" r="{radius}" fill="none" class="stroke-indigo-200/50 dark:stroke-indigo-900/50" stroke-width="4"></circle>
-                    <circle cx="24" cy="24" r="{radius}" fill="none" class="stroke-indigo-600 dark:stroke-indigo-500 transition-all duration-1000 ease-out" stroke-width="4" stroke-dasharray="{circumference}" stroke-dashoffset="{strokeOffset}" stroke-linecap="round"></circle>
-                </svg>
-                <span class="absolute text-xs font-bold text-indigo-700 dark:text-indigo-400">{Math.round(perc)}%</span>
-            </div>
-            
-            <div class="flex-1">
-                <p class="text-sm font-bold text-gray-800 dark:text-gray-200">Test in sospeso</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Riprendi da dove ti eri fermato.</p>
+        <div class="mt-6 flex flex-col sm:flex-row sm:items-center gap-4 p-4 rounded-xl bg-indigo-50/50 dark:bg-indigo-500/5 border border-indigo-100 dark:border-indigo-500/10">
+            <div class="flex items-center gap-4 flex-1">
+                <div class="relative size-14 flex items-center justify-center shrink-0">
+                    <svg class="size-full -rotate-90 transform" viewBox="0 0 48 48">
+                        <circle cx="24" cy="24" r="{radius}" fill="none" class="stroke-indigo-200/50 dark:stroke-indigo-900/50" stroke-width="4"></circle>
+                        <circle cx="24" cy="24" r="{radius}" fill="none" class="stroke-indigo-600 dark:stroke-indigo-500 transition-all duration-1000 ease-out" stroke-width="4" stroke-dasharray="{circumference}" stroke-dashoffset="{strokeOffset}" stroke-linecap="round"></circle>
+                    </svg>
+                    <span class="absolute text-xs font-bold text-indigo-700 dark:text-indigo-400">{Math.round(perc)}%</span>
+                </div>
+                
+                <div class="flex-1">
+                    <p class="text-sm font-bold text-gray-800 dark:text-gray-200">Test in sospeso</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Riprendi da dove ti eri fermato.</p>
+                </div>
             </div>
 
-            <button class="bg-indigo-600 hover:bg-indigo-700 active:scale-95 transition-all text-white px-5 py-2.5 text-sm font-semibold rounded-lg cursor-pointer shadow-sm shadow-indigo-600/30" onclick={() => resumeTest()}>
+            <!-- Pulsante (sotto su mobile, a destra su schermi >= sm) -->
+            <button class="bg-indigo-600 hover:bg-indigo-700 active:scale-95 transition-all text-white px-5 py-2.5 text-sm font-semibold rounded-lg cursor-pointer shadow-sm shadow-indigo-600/30 w-full sm:w-auto shrink-0" onclick={() => resumeTest()}>
                 Riprendi
             </button>
         </div>

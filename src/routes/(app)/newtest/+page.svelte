@@ -207,7 +207,7 @@
         <span class="material-symbols-rounded">arrow_back</span>
         <p class="">Torna alla home</p>
     </div>
-    <h1 class="font-bold font-epilogue text-4xl">Nuovo test</h1>
+    <h1 class="font-bold font-epilogue text-3xl">Nuovo test</h1>
     {#if phase == 0}
     <div>
         <p class="text-gray-600 dark:text-gray-300 mt-1 mb-6">Scegli per quale test allenarti</p>
@@ -295,7 +295,7 @@
     >
         
         <div 
-            class="flex w-full max-w-[500px] max-h-[90vh] flex-col rounded-t-[26px] bg-white dark:bg-gray-700 dark:text-white p-5 pb-[calc(env(safe-area-inset-bottom)+32px)] shadow-[0_-5px_20px_rgba(0,0,0,0.15)]" 
+            class="flex w-full max-h-[90vh] flex-col rounded-t-[26px] bg-white dark:bg-gray-700 dark:text-white p-5 pb-[calc(env(safe-area-inset-bottom)+32px)] shadow-[0_-5px_20px_rgba(0,0,0,0.15)]" 
             transition:fly={{ y: 500, duration: 400, easing: cubicOut }} 
             onclick={(e) => e.stopPropagation()}
         >

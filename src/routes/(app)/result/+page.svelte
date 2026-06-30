@@ -158,7 +158,7 @@
     <div class="flex items-center justify-center px-4 py-1 w-fit text-sm bg-indigo-100 dark:bg-indigo-700/70 rounded-full text-indigo-800 dark:text-white border border-indigo-200 dark:border-indigo-600">
         {getSubjectName(data?.subject)}
     </div>
-    <h1 class="text-4xl font-bold font-epilogue mt-4">Risultato test</h1>
+    <h1 class="text-3xl font-bold font-epilogue mt-4">Risultato test</h1>
     {#if data}
         <p class="text-gray-500 dark:text-gray-300">Il tuo test del {formatDate(data?.date)}</p>
     {/if}

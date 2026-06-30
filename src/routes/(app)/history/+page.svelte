@@ -49,7 +49,7 @@
 <Navbar/>
 
 <main class="p-6 mb-20">
-    <h1 class="text-4xl font-bold font-epilogue mt-4">Storico test</h1>
+    <h1 class="text-3xl font-bold font-epilogue mt-4">Storico test</h1>
     <p class="text-gray-500 dark:text-gray-400">Consulta i tuoi test passati e confronta i risultati ottenuti.</p>
     <div class="mt-6 flex flex-col gap-4">    
         

@@ -22,7 +22,7 @@
         }
     });
 
-    let appVersion = "0.2";
+    let appVersion = "0.3";
 
     async function disconnetti() {
         // 1. Resetta lo stato globale del Rune in Svelte 5
@@ -60,8 +60,8 @@
 
 <Navbar/>
 
-<main class="p-6 mb-20 max-w-md mx-auto">
-    <h1 class="text-4xl font-bold font-epilogue mt-4 dark:text-white">Il tuo account</h1>
+<main class="p-6 mb-20 mx-auto">
+    <h1 class="text-3xl font-bold font-epilogue mt-4 dark:text-white">Il tuo account</h1>
     <p class="text-gray-500 dark:text-gray-300 text-sm mt-1">Verifica lo stato del tuo piano e modifica le tue informazioni personali.</p>
 
     <div class="mt-8 bg-white dark:bg-[#1B1B23] border border-gray-100 dark:border-gray-800 rounded-2xl p-5 shadow-sm flex items-center gap-4">
